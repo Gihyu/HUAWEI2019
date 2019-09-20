@@ -69,8 +69,16 @@ void IO::readSet()
 
 		token = strtok_s(NULL, ",", &tmp);
 		int isPro = atoi(token);
-		Node * node = new Node(corID, corX, corY, corZ, SET_NUM, nodeType, corctType, isPro);
 
+		Node * node = NULL;
+		if (QUESTION_NUM == 1 || QUESTION_NUM == 2)
+		{
+			node = new Node(corID, corX, corY, corZ, 0, nodeType, corctType);
+		}
+		else
+		{
+			node = new Node(corID, corX, corY, corZ, isPro, nodeType, corctType);
+		}
 		_schedule->pushNode(node);
 		//cout << corID << "," << corX << "," << corY<<","<<corZ << "," << isVer << "," << isHon << "," << isPro << endl;
 	}
@@ -134,15 +142,10 @@ void IO::generateEdges()
 	cout << "----------------------------Print Available Edges Informations---------------------------" << endl << endl;
 	vector<Edge*> allEdges = _schedule->getAllEdgeList();
 
-	double THETA = Util::set1Theta;
-	if (SET_NUM == 2)
-	{
-		THETA = Util::set2Theta;
-	}
 	int _avaiCount=0;
 	for (auto & edg : allEdges)
 	{	
-		if (edg->getLinearDis()*Util::delta < THETA)
+		if (edg->getLinearDis()*Util::delta < Util::Theta)
 		{	
 			Node * headN = edg->getHeadNode();
 			Node * tailN = edg->getTailNode();
@@ -170,4 +173,19 @@ void IO::generateEdges()
 	}
 	cout << "----------------------------Finish Nodes can vist EdgeSetSize Informations---------------------------" << endl << endl;
 
+	//check number of arcs and number of i can go to js
+	int allcanGoTo = 0;
+	for (auto * nod: _schedule->getNodeList())
+	{
+		allcanGoTo += nod->getCanVisitSetByDis().size();
+	}
+	cout << " total canVisitNodes num " << allcanGoTo << endl;
+
+
+	/*vector<Edge*> outEdges = _schedule->getNodeList()[0]->getOutEdgeSet();
+	for (int oe = 0; oe < outEdges.size(); oe++)
+	{	
+		int nextID = outEdges[oe]->getTailNode()->getID();
+		cout << "hehe" << nextID <<endl;
+	}*/
 }

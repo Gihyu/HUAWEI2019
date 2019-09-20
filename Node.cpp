@@ -26,7 +26,8 @@ double Node::getLinearDisFrom(Node* nd)
 	double nextY = nd->getY();
 	double nextZ = nd->getZ();
 
-	return sqrt(pow(_x - nextX, 2) + pow(_y - nextY, 2) + pow(_z - nextZ, 2));
+	//return sqrt(pow(_x - nextX, 2) + pow(_y - nextY, 2) + pow(_z - nextZ, 2));
+	return sqrt((_x - nextX)*(_x - nextX) + (_y - nextY)*(_y - nextY) + (_z - nextZ)*(_z - nextZ));
 }
 
 void Node::printNodeInfo()

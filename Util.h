@@ -18,8 +18,8 @@ using namespace std;
 #include <iomanip>
 #include<ilcplex/ilocplex.h>
 
-
-#define SET_NUM 1
+#define NODE_NUM 613
+#define QUESTION_NUM 1
 
 class Util
 {
@@ -27,18 +27,16 @@ public:
 	static string INPUTPATH;
 	static string OUTPUTPATH;
 
+	static double delta;
 
-	static float set1Theta;
-	static float set2Theta;
-	static float set1Alpha1;
-	static float set2Alpha1;
-	static float set1Alpha2;
-	static float set2Alpha2;
-	static float set1Beta1;
-	static float set2Beta1;
-	static float set1Beta2;
-	static float set2Beta2;
-	static float delta;
+	static double Theta;
+	static double Alpha_1;
+	static double Alpha_2;
+	static double Beta_1;
+	static double Beta_2;
+
+	static double w1;
+	static double w2;
 
 };
 

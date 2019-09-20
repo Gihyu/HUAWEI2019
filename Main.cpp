@@ -1,4 +1,5 @@
-﻿#include"IO.h"
+﻿#include"Model.h"
+//#include"IO.h"
 
 int main()
 {
@@ -7,6 +8,10 @@ int main()
 	io->readInput();
 	io->generateEdges();
 	//system("pause");
+
+	Model* model = new Model(sch);
+	model->init();
+	model->solveMIP_arcModel();
 
 	return 0;
 }

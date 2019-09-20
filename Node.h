@@ -31,20 +31,21 @@ private:
 	CORRECTTYPE _crType;
 
 	int _mayBePerturbed;   //1, this node may not success in correcting with question 2;   0,otherwise
+						   // 1 means this node might fail with probility 20%
 
 	int _situation;  // mark the situation of the Block (Dijkstra? BFS?) in order to run faster
 					 // 0 means notFound ; 1 means Searching ; 2 means visted
 					 // initial is 0
-	int _isProbitNode; // 1 means this node might fail with probility 20%
+
 	vector<Node* > _canVisitSetByDis;   //initialized by the maximum linear distance, e.g., 30 in our competition
 
 	vector<Edge* > _inEdges;
 	vector<Edge* > _outEdges;
 
 public:
-	Node(int id, double x, double y, double z, int problem,NODETYPE nodeType,CORRECTTYPE crType,int isProbitNode)
+	Node(int id, double x, double y, double z, int problem,NODETYPE nodeType,CORRECTTYPE crType)
 	{
-		_id = id, _x = x ,_y = y,_z = z, _mayBePerturbed = problem,_nodeType = nodeType,_crType = crType,_isProbitNode = isProbitNode;
+		_id = id, _x = x ,_y = y,_z = z, _mayBePerturbed = problem,_nodeType = nodeType,_crType = crType;
 	}
 	int getID() { return _id; }
 	double getX() { return _x; }

@@ -1,8 +1,9 @@
 ﻿#include"Model.h"
 
 Model::Model(Schedule* sch)
-:_schedule(sch){
-
+{
+	_schedule = sch;
+	_allNodeList = sch->getNodeList();
 }
 
 
@@ -73,14 +74,11 @@ void Model::init()
 		else if (nodeList[i]->getNodeType() == SOURCE)
 		{
 			vector<Edge*> outEdges = nodeList[i]->getOutEdgeSet();
-			cout << " BUG NODE ID " << nodeList[i]->getID() << " and outEdgeSize " << outEdges.size() << endl;
 			for (int oe = 0; oe < outEdges.size(); oe++)
 			{	
-				//cout << "hehe" << endl;
 				int xVarIndex = _VarIndex[nodeList[i]->getID()][outEdges[oe]->getTailNode()->getID()];
 				expr += _X_ij[xVarIndex];
 			}
-			cout << "haha" << endl;
 			string consName = "flowBalance_Node_" + to_string(nodeList[i]->getID());
 			_flow_blc.add(IloRange(_env, 1, expr, 1, consName.c_str()));
 		}
@@ -203,24 +201,25 @@ void Model::init()
 			 IloExpr expr(_env);
 
 			 int varID = _VarIndex[nodeList[i]->getID()][canVisitSet[j]->getID()];
-			 expr -= _E_h_ij[varID];
+			 expr += _E_h_ij[varID];
 
 			 if (nodeList[i]->getCorrectType() == VERTICAL)
 			 {
 				 vector<Edge*> inEdges = nodeList[i]->getInEdgeSet();  //compute E_h_ki
 				 for (int k = 0; k < inEdges.size(); k++)
 				 {	
-					 if (inEdges[k]->getHeadNode()->getID() != canVisitSet[j]->getID()) // BUG !!!!
-					 {
+					 //if (inEdges[k]->getHeadNode()->getID() != canVisitSet[j]->getID()) // BUG !!!!
+					 //{
 						 int ki_ID = _VarIndex[inEdges[k]->getHeadNode()->getID()][nodeList[i]->getID()];
-						 expr += _E_h_ij[ki_ID];
-					 }
+						 expr -= _E_h_ij[ki_ID];
+					 //}
 					
 				 }
 			 }
-			 expr += _X_ij[varID]*Util::delta*nodeList[i]->getLinearDisFrom(canVisitSet[j]);  //Cij  delta  Xij
+			 expr -= _X_ij[varID]*Util::delta*nodeList[i]->getLinearDisFrom(canVisitSet[j]);  //Cij  delta  Xij
+			 expr += 2 * Util::Theta*(1 - _X_ij[varID]);  // +2M(1-x)
 			 string consName = "H_computation_From_Node_" + to_string(nodeList[i]->getID())+"_to_Node_"+to_string(canVisitSet[j]->getID());
-			 _correct_h_cons.add(IloRange(_env, 0, expr, 0, consName.c_str()));
+			 _correct_h_cons.add(IloRange(_env, 0, expr, IloInfinity, consName.c_str()));
 			 expr.end();
 		 }
 	 }
@@ -236,23 +235,25 @@ void Model::init()
 			 IloExpr expr(_env);
 
 			 int varID = _VarIndex[nodeList[i]->getID()][canVisitSet[j]->getID()];
-			 expr -= _E_v_ij[varID];
+			 expr += _E_v_ij[varID];
 
 			 if (nodeList[i]->getCorrectType() == HORIZONTAL)
 			 {
 				 vector<Edge*> inEdges = nodeList[i]->getInEdgeSet();  //compute E_v_ki
 				 for (int k = 0; k < inEdges.size(); k++)
 				 {	
-					 if (inEdges[k]->getHeadNode()->getID() != canVisitSet[j]->getID())// BUG !!!!
-					 {
+					 //if (inEdges[k]->getHeadNode()->getID() != canVisitSet[j]->getID())// BUG !!!!
+					 //{
 						 int ki_ID = _VarIndex[inEdges[k]->getHeadNode()->getID()][nodeList[i]->getID()];
-						 expr += _E_v_ij[ki_ID];
-					 }
+						 expr -= _E_v_ij[ki_ID];
+					 //}
 				 }
 			 }
-			 expr += _X_ij[varID] * Util::delta*nodeList[i]->getLinearDisFrom(canVisitSet[j]);  //Cij  delta  Xij
+			 expr -= _X_ij[varID] * Util::delta*nodeList[i]->getLinearDisFrom(canVisitSet[j]);  //Cij  delta  Xij
+			 expr += 2 * Util::Theta*(1 - _X_ij[varID]);  // +2M(1-x)
+
 			 string consName = "V_computation_From_Node_" + to_string(nodeList[i]->getID()) + "_to_Node_" + to_string(canVisitSet[j]->getID());
-			 _correct_v_cons.add(IloRange(_env, 0, expr, 0, consName.c_str()));
+			 _correct_v_cons.add(IloRange(_env, 0, expr, IloInfinity, consName.c_str()));
 			 expr.end();
 		 }
 	 }
@@ -287,7 +288,7 @@ void Model::solveMIP_arcModel()
 	try
 	{
 		//_solver.setParam(IloCplex::EpGap, 0.002);
-		_solver.setParam(IloCplex::TiLim, 300);
+		_solver.setParam(IloCplex::TiLim, 600);
 		//_solver.setParam(IloCplex::Param::Benders::Strategy,IloCplex::BendersFull);
 		//_solver.setParam(IloCplex::RootAlg, IloCplex::Barrier);
 		_solver.solve();
@@ -325,77 +326,62 @@ void Model::solveMIP_arcModel()
 
 	//show details
 
-	//cout << "Now show var details" << endl << endl;
-	//IloNumArray aircraftSoln = IloNumArray(_env);
-	//_solver.getValues(aircraftSoln, _aircraftVar);
-	//IloNumArray groundSoln = IloNumArray(_env);
-	//_solver.getValues(groundSoln, _groundVar);
-	//IloNumArray flowSoln = IloNumArray(_env);
-	//_solver.getValues(flowSoln, _flowVar);
-	//IloNumArray longmVar_posSoln = IloNumArray(_env);
-	//_solver.getValues(longmVar_posSoln, _longmVar_pos);
-	//IloNumArray longmVar_negSoln = IloNumArray(_env);
-	//_solver.getValues(longmVar_negSoln, _longmVar_neg);
-	//IloNumArray lamVar_posSoln = IloNumArray(_env);
-	//_solver.getValues(lamVar_posSoln, _lamVar_pos);
-	//IloNumArray lamVar_negSoln = IloNumArray(_env);
-	//_solver.getValues(lamVar_negSoln, _lamVar_neg);
-	//cout << "fleet flow vars :" << endl;
-	//for (int i = 0; i < aircraftSoln.getSize(); i++)
-	//{
-	//	if (aircraftSoln[i] > 0.001)
-	//	{
-	//		cout << _aircraftVar[i] << " : " << aircraftSoln[i] << endl;
-	//	}
-	//}
-	//cout << endl << "ground cargo flow vars :" << endl;
-	//for (int i = 0; i < groundSoln.getSize(); i++)
-	//{
-	//	if (groundSoln[i]  > 0.001)
-	//	{
-	//		cout << _groundVar[i] << " : " << groundSoln[i] << endl;
-	//	}
-	//}
-	//cout << endl << "Leg-slot cargo flow vars :( value and slotDeviation)" << endl;
-	//for (int i = 0; i < flowSoln.getSize(); i++)
-	//{
-	//	if (flowSoln[i]  > 0.001)
-	//	{
-	//		cout << _flowVar[i] << " : " << flowSoln[i] << "  (long" << Util::Aslot_CGdeviation_long[_SlotVarArray[i]] << " lg" << Util::Aslot_CGdeviation_la[_SlotVarArray[i]] << ")" << endl;
-	//	}
-	//}
-	//cout << endl << "longM pos vars :" << endl;
-	//for (int i = 0; i < longmVar_posSoln.getSize(); i++)
-	//{
-	//	if (longmVar_posSoln[i]  > 0.001)
-	//	{
-	//		cout << _longmVar_pos[i] << " : " << longmVar_posSoln[i] << endl;
-	//	}
-	//}
-	//cout << endl << "longM neg vars :" << endl;
-	//for (int i = 0; i < longmVar_negSoln.getSize(); i++)
-	//{
-	//	if (longmVar_negSoln[i]  > 0.001)
-	//	{
-	//		cout << _longmVar_neg[i] << " : " << longmVar_negSoln[i] << endl;
-	//	}
-	//}
-	//cout << endl << "laM pos vars :" << endl;
-	//for (int i = 0; i < lamVar_posSoln.getSize(); i++)
-	//{
-	//	if (lamVar_posSoln[i]  > 0.001)
-	//	{
-	//		cout << _lamVar_pos[i] << " : " << lamVar_posSoln[i] << endl;
-	//	}
-	//}
-	//cout << endl << "laM neg vars :" << endl;
-	//for (int i = 0; i < lamVar_negSoln.getSize(); i++)
-	//{
-	//	if (lamVar_negSoln[i]  > 0.001)
-	//	{
-	//		cout << _lamVar_neg[i] << " : " << lamVar_negSoln[i] << endl;
-	//	}
-	//}
+	cout << "Now show var details" << endl << endl;
+	IloNumArray xSoln = IloNumArray(_env);
+	_solver.getValues(xSoln, _X_ij);
+
+	IloNumArray hSoln = IloNumArray(_env);
+	_solver.getValues(hSoln, _E_h_ij);
+
+	IloNumArray vSoln = IloNumArray(_env);
+	_solver.getValues(vSoln, _E_v_ij);
+	
+	cout << "x flow vars :" << endl;
+	for (int i = 0; i < xSoln.getSize(); i++)
+	{
+		if (xSoln[i] > 0.001)
+		{	
+			int mIndex = 0;
+			int nIndex = 0;
+			for (int m = 0; m < _schedule->getNodeList().size(); m++)
+			{	
+				bool found = false;
+				for (int n = 0; n < _schedule->getNodeList().size(); n++)
+				{
+					if (_VarIndex[m][n] == i)
+					{
+						mIndex = m;
+						nIndex = n;
+						found = true;
+						break;
+					}
+				}
+				if (found)
+				{
+					break;
+				}
+			}
+			cout << _X_ij[i] << " : " << xSoln[i] << " and linearDis from node " << mIndex << " to " << nIndex << " is ";
+			cout<< _allNodeList[mIndex]->getLinearDisFrom(_allNodeList[nIndex])<<endl;
+		}
+	}
+	cout <<endl<< "h flow vars :" << endl;
+	for (int i = 0; i < hSoln.getSize(); i++)
+	{
+		if (hSoln[i] > 0.001)
+		{
+			cout << _E_h_ij[i] << " : " << hSoln[i] << endl;
+		}
+	}
+	cout << endl << "v flow vars :" << endl;
+	for (int i = 0; i < vSoln.getSize(); i++)
+	{
+		if (vSoln[i] > 0.001)
+		{
+			cout << _E_v_ij[i] << " : " << vSoln[i] << endl;
+		}
+	}
+
 }
 
 void Model::end_model()

@@ -16,7 +16,16 @@ void IO::readInput()
 
 void IO::readSet()
 {
-	string filename = Util::INPUTPATH + string("aftdata1.csv");
+	string filename = Util::INPUTPATH;
+	if (INPUTSET_NUM == 1)
+	{
+		filename+= string("aftdata1.csv");
+	}
+	else if(INPUTSET_NUM == 2)
+	{
+		filename += string("aftdata2.csv");
+	}
+	
 	ifstream file;
 	file.open(filename.c_str());
 	cout << "* Read location information from " << filename << "\n";
@@ -152,6 +161,8 @@ void IO::generateEdges()
 			if (headN->getNodeType() != SINK && tailN->getNodeType()!=SOURCE)
 			{
 				_schedule->pushAvaiEdge(edg);
+				edg->printEdgeInfo();
+
 				edg->setAvaiCount(_avaiCount);
 				_avaiCount++;
 
@@ -188,4 +199,20 @@ void IO::generateEdges()
 		int nextID = outEdges[oe]->getTailNode()->getID();
 		cout << "hehe" << nextID <<endl;
 	}*/
+}
+
+
+double IO::getDegAngle(Node* nd1, Node* nd2, Node* nd3) 
+{
+	Point p1(0, 0, 0), p2(1, 0, 0), p3(0.5, -0.5, 0);
+	Eigen::Vector3d v1 = p2 - p1;
+	Eigen::Vector3d v2 = p3 - p1;
+	//one method, radian_angle belong to 0~pi
+	//double radian_angle = atan2(v1.cross(v2).transpose() * (v1.cross(v2) / v1.cross(v2).norm()), v1.transpose() * v2);
+	//another method, radian_angle belong to 0~pi
+	double radian_angle = atan2(v1.cross(v2).norm(), v1.transpose() * v2);
+	if (v1.cross(v2).z() < 0) {
+		radian_angle = 2 * M_PI - radian_angle;
+	}
+	return radian_angle * 180 / M_PI;
 }

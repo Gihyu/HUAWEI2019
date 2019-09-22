@@ -2,6 +2,9 @@
 #ifndef IO_H
 #define IO_H
 #include"Schedule.h"
+
+typedef Eigen::Vector3d Point;
+
 class IO
 {
 private:
@@ -17,6 +20,8 @@ public:
 	string GetStringFromCSV(string line, int nIdx);
 
 	void generateEdges();
+
+	double getDegAngle(Node* nd1, Node* nd2, Node* nd3);
 
 };
 

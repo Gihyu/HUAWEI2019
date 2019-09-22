@@ -13,5 +13,8 @@ int main()
 	model->init();
 	model->solveMIP_arcModel();
 
+	//cout << io->getDegAngle(sch->getNodeList()[0], sch->getNodeList()[1], sch->getNodeList()[2]) << endl;
+
+
 	return 0;
 }

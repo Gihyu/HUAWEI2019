@@ -5,6 +5,7 @@ class Model
 {
 private:
 	Schedule* _schedule;
+	vector<Node* >_allNodeList;
 	
 	IloModel _model;
 	IloEnv _env;

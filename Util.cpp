@@ -9,23 +9,34 @@ string PATH = "C:\\Users\\suyi0\\source\\repos\\HUAWEI2019MMC\\";
 string Util::INPUTPATH = "C:/gihyu/codes/vsWorkSpace/HUAWEI2019Git/input/";
 string Util::OUTPUTPATH = "C:/gihyu/codes/vsWorkSpace/HUAWEI2019Git/output/";
 
+
 double Util::delta = 0.001;
-double Util::Theta = 30;
+//set1
+double Util::Theta = 30;   
 double Util::Alpha_1 = 25;
 double Util::Alpha_2 = 15;
 double Util::Beta_1 = 20;
 double Util::Beta_2 = 25;
 
-double Util::w1 = 1;
-double Util::w2 = 0.01;
-
-
 // set 2
-//float Util::set2Theta = 20;
-//float Util::set2Alpha1 = 20;
-//float Util::set2Alpha2 = 10;
-//float Util::set2Beta1 = 15;
-//float Util::set2Beta2 = 20;
+//double Util::Theta = 20;
+//double Util::Alpha_1 = 20;
+//double Util::Alpha_2 = 10;
+//double Util::Beta_1 = 15;
+//double Util::Beta_2 = 20;
+
+//set1-mustSuccess
+//double Util::Theta = 15;   
+//double Util::Alpha_1 = 25;
+//double Util::Alpha_2 = 15;
+//double Util::Beta_1 = 20;
+//double Util::Beta_2 = 25;
+
+double Util::w1 = 0.001;
+double Util::w2 = 0.000001;   //2000 ro 0.000001
+
+
+
 
 
 // 要注意两个集合参数不一致

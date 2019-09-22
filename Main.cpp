@@ -10,7 +10,9 @@ int main()
 	//system("pause");
 
 	Model* model = new Model(sch);
-	model->init();
+	//model->init();
+	model->init_Q3_nonPro();
+	//model->init_forSet1_250_340();
 	model->solveMIP_arcModel();
 
 	//cout << io->getDegAngle(sch->getNodeList()[0], sch->getNodeList()[1], sch->getNodeList()[2]) << endl;

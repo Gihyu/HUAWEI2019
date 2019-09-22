@@ -32,5 +32,17 @@ double Node::getLinearDisFrom(Node* nd)
 
 void Node::printNodeInfo()
 {
-	cout << "Node: ID " << _id << ", X " << _x << ", Y " << _y << ", Z " << _z << ", Type " << _nodeType << ", CrType " << _crType << ", canVisitListSize " << _canVisitSetByDis.size() << endl;
+	cout << "Node: ID " << _id << ", X " << _x << ", Y " << _y << ", Z " << _z << ", Type " << _nodeType << ", CrType " << _crType << ", canVisitListSize " << _canVisitSetByDis.size() <<" isProblemNode "<< _mayBePerturbed<< endl;
+}
+
+bool Node::isProblemNode()
+{
+	if (_mayBePerturbed == 1)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }

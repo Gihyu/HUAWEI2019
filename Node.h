@@ -74,5 +74,7 @@ public:
 
 	void pushOutEdge(Edge* edg) { _outEdges.push_back(edg); }
 	vector<Edge*> getOutEdgeSet() { return _outEdges; }
+
+	bool isProblemNode();
 	
 };

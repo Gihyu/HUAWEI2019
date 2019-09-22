@@ -8,6 +8,8 @@ private:
 
 	vector<Edge*> _availableEdgeList;  //linearDistan < delta*theta.  they will be showed in class Node, inEdges or outEdges.
 
+	vector<Edge*> _NonPbAvaiEdgeList;  // Question 3
+
 public:
 	Schedule();
 	~Schedule();

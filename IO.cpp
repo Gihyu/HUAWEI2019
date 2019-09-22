@@ -17,9 +17,10 @@ void IO::readInput()
 void IO::readSet()
 {
 	string filename = Util::INPUTPATH;
+	//filename += string("aftdata1.csv");
 	if (INPUTSET_NUM == 1)
 	{
-		filename+= string("aftdata1.csv");
+		filename += string("aftdata1.csv");
 	}
 	else if(INPUTSET_NUM == 2)
 	{
@@ -79,15 +80,8 @@ void IO::readSet()
 		token = strtok_s(NULL, ",", &tmp);
 		int isPro = atoi(token);
 
-		Node * node = NULL;
-		if (QUESTION_NUM == 1 || QUESTION_NUM == 2)
-		{
-			node = new Node(corID, corX, corY, corZ, 0, nodeType, corctType);
-		}
-		else
-		{
-			node = new Node(corID, corX, corY, corZ, isPro, nodeType, corctType);
-		}
+		Node * node = node = new Node(corID, corX, corY, corZ, isPro, nodeType, corctType);
+
 		_schedule->pushNode(node);
 		//cout << corID << "," << corX << "," << corY<<","<<corZ << "," << isVer << "," << isHon << "," << isPro << endl;
 	}
@@ -199,6 +193,8 @@ void IO::generateEdges()
 		int nextID = outEdges[oe]->getTailNode()->getID();
 		cout << "hehe" << nextID <<endl;
 	}*/
+
+
 }
 
 

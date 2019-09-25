@@ -12,18 +12,18 @@ string Util::OUTPUTPATH = "C:/gihyu/codes/vsWorkSpace/HUAWEI2019Git/output/";
 
 double Util::delta = 0.001;
 //set1
-double Util::Theta = 30;   
-double Util::Alpha_1 = 25;
-double Util::Alpha_2 = 15;
-double Util::Beta_1 = 20;
-double Util::Beta_2 = 25;
+//double Util::Theta = 30;   
+//double Util::Alpha_1 = 25;
+//double Util::Alpha_2 = 15;
+//double Util::Beta_1 = 20;
+//double Util::Beta_2 = 25;
 
 // set 2
-//double Util::Theta = 20;
-//double Util::Alpha_1 = 20;
-//double Util::Alpha_2 = 10;
-//double Util::Beta_1 = 15;
-//double Util::Beta_2 = 20;
+double Util::Theta = 20;
+double Util::Alpha_1 = 20;
+double Util::Alpha_2 = 10;
+double Util::Beta_1 = 15;
+double Util::Beta_2 = 20;
 
 //set1-mustSuccess
 //double Util::Theta = 30;   

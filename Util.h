@@ -19,10 +19,10 @@ using namespace std;
 #include<ilcplex/ilocplex.h>
 #include <Eigen/Dense>
 
-#define NODE_NUM 613
-//#define NODE_NUM 327
+//#define NODE_NUM 613
+#define NODE_NUM 327
 #define QUESTION_NUM 1
-#define INPUTSET_NUM 1
+#define INPUTSET_NUM 2
 
 class Util
 {

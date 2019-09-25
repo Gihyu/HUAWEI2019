@@ -665,11 +665,11 @@ void Model::init_Q3_nonPro()
 			expr_6.end();
 		}
 	}
-	_model.add(H_Y_Z_BOUND_1);
+	//_model.add(H_Y_Z_BOUND_1);
 	_model.add(H_Y_Z_BOUND_2);
-	_model.add(H_Y_Z_BOUND_3);
-	_model.add(H_Y_Z_BOUND_4);
-	_model.add(H_Y_Z_BOUND_5);
+	//_model.add(H_Y_Z_BOUND_3);
+	//_model.add(H_Y_Z_BOUND_4);
+	//_model.add(H_Y_Z_BOUND_5);
 	_model.add(H_Y_Z_BOUND_6);
 
 	//V
@@ -761,11 +761,11 @@ void Model::init_Q3_nonPro()
 			expr_6.end();
 		}
 	}
-	_model.add(V_Y_Z_BOUND_1);
+	//_model.add(V_Y_Z_BOUND_1);
 	_model.add(V_Y_Z_BOUND_2);
-	_model.add(V_Y_Z_BOUND_3);
-	_model.add(V_Y_Z_BOUND_4);
-	_model.add(V_Y_Z_BOUND_5);
+	//_model.add(V_Y_Z_BOUND_3);
+	//_model.add(V_Y_Z_BOUND_4);
+	//_model.add(V_Y_Z_BOUND_5);
 	_model.add(V_Y_Z_BOUND_6);
 
 

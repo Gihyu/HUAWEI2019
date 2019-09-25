@@ -884,6 +884,7 @@ void Model::solveMIP_arcModel()
 	IloNumArray vSoln = IloNumArray(_env);
 	_solver.getValues(vSoln, _E_v_ij);
 	
+	double SUMdis = 0.0;
 	cout << "x flow vars :" << endl;
 	for (int i = 0; i < xSoln.getSize(); i++)
 	{
@@ -911,8 +912,10 @@ void Model::solveMIP_arcModel()
 			}
 			cout << _X_ij[i] << " : " << xSoln[i] << " and linearDis from node " << mIndex << " to " << nIndex << " is ";
 			cout<< _allNodeList[mIndex]->getLinearDisFrom(_allNodeList[nIndex])<<endl;
+			SUMdis += _allNodeList[mIndex]->getLinearDisFrom(_allNodeList[nIndex]);
 		}
 	}
+	cout << "SUMdis is " << SUMdis << endl << endl;
 	cout <<endl<< "h flow vars :" << endl;
 	for (int i = 0; i < hSoln.getSize(); i++)
 	{

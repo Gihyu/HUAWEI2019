@@ -148,11 +148,33 @@ void IO::generateEdges()
 	int _avaiCount=0;
 	for (auto & edg : allEdges)
 	{	
-		if (edg->getLinearDis()*Util::delta < Util::Theta)
+		double errorUpNum = edg->getLinearDis()*Util::delta;
+		if (errorUpNum< Util::Theta)
 		{	
 			Node * headN = edg->getHeadNode();
 			Node * tailN = edg->getTailNode();
-			if (headN->getNodeType() != SINK && tailN->getNodeType()!=SOURCE)
+			//中间点也需满足校正的才生成试试
+			bool detail_length_OK = false;
+			if (tailN->getCorrectType() == VERTICAL)  //垂直不大于α1，水平不大于α2
+			{
+				if (errorUpNum <= Util::Alpha_1&&errorUpNum <= Util::Alpha_2)
+				{
+					detail_length_OK = true;
+				}
+			}
+			else if (tailN->getCorrectType() == HORIZONTAL)  //垂直不大于β1，水平不大于β2
+			{
+				if (errorUpNum <= Util::Beta_1&&errorUpNum <= Util::Beta_2)
+				{
+					detail_length_OK = true;
+				}
+			}
+			else
+			{
+				detail_length_OK = true;
+			}
+
+			if (headN->getNodeType() != SINK && tailN->getNodeType()!=SOURCE && detail_length_OK)
 			{
 				_schedule->pushAvaiEdge(edg);
 				edg->printEdgeInfo();
